@@ -1,0 +1,100 @@
+#!/bin/sh
+
+############################################################
+# postflight
+# ZTE dataCard
+# Created by Wanghao on 15/03/09.
+# Copyright 2009 ZTE Corp. All rights reserved.
+############################################################
+
+
+############################################################
+# get pre-define var 
+############################################################
+source "$1/Contents/Resources/common"
+
+echo "postflight start!"
+
+############################################################
+# check --> delete tmp files 
+# locations: /Library/Receipts
+# files: app.pkg drv.pkg  
+############################################################
+cd "$recp_root"
+if [ "x$debug" = "xYES" ]; then
+	echo `pwd`
+	echo "$inst_comps"
+fi
+
+for var_item in $inst_comps; do
+	if [ -e "$var_item" ]; then
+		echo "Delete $var_item"
+ 		rm -R "$var_item"
+    	fi 		
+done
+
+
+############################################################
+# install driver without restart
+# chown --> load --> update kextcache --> signal kextd -HUP
+# locations: /System/Library/Extensions
+############################################################
+
+cd "$drv_root"
+if [ "x$debug" = "xYES" ]; then
+	echo `pwd`
+	echo "$drv_names"
+fi
+
+
+######################
+#  chown 
+######################
+for drv_item in $drv_names; do
+	if [ -e "$drv_item" ]; then
+		echo "chown and chmod driver $drv_item"
+ 		chown -R root:wheel "$drv_item"
+ 		chmod -R 755 "$drv_item"
+ 		##kextload -t "$drv_item"
+    	fi 	
+done
+
+
+######################
+# update kextcache
+######################
+OSVersion=`sw_vers|grep "ProductVersion"|grep -o "10.6"`
+    
+# Here configurate for 10.6
+if [ "x$OSVersion" = "x10.6" ]; then
+	echo "Update kextcache for $OSVersion"      
+fi
+	
+# Here configurate for 10.4/10.5
+if [ "x$OSVersion" != "x10.6" ]; then
+	echo "Update kextcache for 10.4/10.5"
+        sudo rm -rf "/System/Library/Extensions.kextcache"
+	sudo kextcache -k "/System/Library/Extensions"
+fi
+
+
+sudo touch "$drv_root"
+
+######################
+#  load Driver for the first time
+######################
+for drv_item in $drv_names; do
+	if [ -e "$drv_item" ]; then
+		echo "Load driver $drv_item"
+ 		kextload -t "$drv_item"
+    	fi 	
+done
+
+######################
+# signal -HUP to kextd
+######################
+PID=`ps -axc|grep "kextd"|awk '{print $1}'`
+echo "will kill process kextd, PID $PID"
+sudo kill -HUP $PID
+
+echo "postflight end!"

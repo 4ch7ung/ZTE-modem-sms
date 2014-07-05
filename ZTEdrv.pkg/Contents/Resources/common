@@ -1,0 +1,57 @@
+############################################################
+# common
+# ZTE dataCard
+# Created by Wanghao on 15/03/09.
+# Copyright 2009 ZTE Corp. All rights reserved.
+############################################################
+
+
+############################################################
+# !!!    this field must be configurated  !!!
+# third-party need  
+# examples : integrate_driver="YES" -- need  
+#  			integrate_driver=""    -- needn't 
+#
+# integrate_driver       -- driver
+############################################################ 
+integrate_driver="YES"
+
+############################################################
+# execute with debug info ? 
+# examples : debug ="YES" -- need  
+#            debug =""    -- needn't
+############################################################
+debug=""
+
+
+
+
+########################################
+# Driver
+# locations:/System/Library/Extensions
+# files:ZTEUSBCDCACMData.kext 
+#       ZTEUSBCDCACMControl.kext
+########################################
+drv_root="/System/Library/Extensions"
+drv_names="ZTEUSBMassStorageFilter.kext ZTEUSBCDCACMData.kext ZTEUSBCDCACMControl.kext"
+
+
+
+########################################
+# Modem Scripts
+# locations:/Library/Modem Scripts
+# files: "ZTE USB MODEM"
+#       
+########################################
+ZTE_script_folder="/Library/Modem Scripts/"
+ZTE_script_name="ZTE USB MODEM"
+
+
+########################################
+# tmp files
+# locations:/Library/Receipts
+# files: app.pkg drv.pkg
+########################################
+recp_root="/Library/Receipts"
+inst_comps="drv.pkg"
+

@@ -1,0 +1,67 @@
+#!/bin/sh
+############################################################
+# preflight
+# ZTE dataCard
+# Created by Wanghao on 15/03/09.
+# Copyright 2009 ZTE Corp. All rights reserved.
+############################################################
+
+
+
+############################################################
+# Things we do
+# 1.check --> delete driver files
+# 2.check --> delete modem script files 
+############################################################
+
+ 
+############################################################
+# get pre-define var 
+############################################################
+source "$1/Contents/Resources/common"
+ 
+echo "preflight start!"
+ 
+############################################################
+# 1.check --> delete driver files 
+# locations: /System/Library/Extensions
+# files: ZTEUSBCDCACMData.kext  ZTEUSBCDCACMControl.kext  
+############################################################
+cd "$drv_root"
+if [ "x$debug" = "xYES" ]; then
+	echo `pwd`
+	echo "$drv_names"
+fi
+
+for delete_item in $drv_names; do
+	if [ -e "$delete_item" ]; then
+     	sudo kextunload "$delete_item"
+		rm -rf "$delete_item"
+    		echo "Delete $delete_item"
+    	fi
+done
+
+
+
+
+############################################################
+# 2.check --> delete modem script files 
+# locations: /Library/Modem Scripts
+# files: "ZTE USB MODEM"
+############################################################ 
+cd "$ZTE_script_folder"
+if [ "x$debug" = "xYES" ]; then
+	echo `pwd`
+	echo "$ZTE_script_name"
+fi
+
+
+
+if [ -e "$ZTE_script_name" ]; then		
+	rm -rf "$ZTE_script_name"
+    	echo "Delete - $ZTE_script_name"
+fi
+
+
+ 
+echo "preflight end!"

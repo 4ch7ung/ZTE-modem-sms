@@ -1,0 +1,14 @@
+#!/bin/bash
+if [ -z $1 ]
+then
+    echo "Usage: sendsms <serial_modem_device> <phone_number> <message>"
+    exit 1
+fi
+device=$1
+phone=$2
+message=$3
+
+echo -e "at+cmgf=1\r" >$device
+echo -e "at+cmgs=\"$phone\"\r" >$device
+echo -e "$message\032" >$device
+echo "Message to $phone from \"$device\" has been sent (at least I hope so)."

@@ -1,0 +1,67 @@
+#Uninstaller of ZTE Datacard Drver in Mac OS X
+#Copyright ZTE Corporation 2006 - 2010
+echo "Welcome to use ZTE Datacard."
+echo "Now, begining to uninstall ZTE Datacard driver......"
+
+########################################
+#01. Driver
+# locations:/System/Library/Extensions
+# files:ZTEUSBCDCACMData.kext 
+#       ZTEUSBCDCACMControl.kext
+#	  ZTEUSBMassStorageFilter.kext
+########################################
+drv_root="/System/Library/Extensions"
+drv_names="ZTEUSBMassStorageFilter.kext ZTEUSBCDCACMData.kext ZTEUSBCDCACMControl.kext"
+
+
+########################################
+# 02. Modem Scripts
+# locations:/Library/Modem Scripts
+# files: "ZTE USB MODEM"
+#       
+########################################
+ZTE_script_folder="/Library/Modem Scripts/"
+ZTE_script_name="ZTE USB MODEM"
+
+
+
+
+
+############################################################
+# 1.check --> delete driver files 
+# locations: /System/Library/Extensions
+# files:ZTEUSBCDCACMData.kext 
+#       ZTEUSBCDCACMControl.kext
+#	ZTEUSBMassStorageFilter.kext 
+#       
+#     
+############################################################
+cd "$drv_root"
+
+for delete_item in $drv_names; do
+	if [ -e "$delete_item" ]; then
+     	sudo kextunload "$delete_item"
+	        sudo rm -rf "$delete_item"
+    		echo "Delete $delete_item"
+    	fi
+done
+
+sudo touch  "$drv_root"
+
+
+############################################################
+# 2.check --> delete modem script files 
+# locations: /Library/Modem Scripts
+# files: "ZTE USB MODEM"
+############################################################ 
+cd "$ZTE_script_folder"
+
+
+if [ -e "$ZTE_script_name" ]; then		
+	rm -rf "$ZTE_script_name"
+    	echo "Delete - $ZTE_script_name"
+fi
+
+
+
+echo "......ZTE Datacard driver has Uninstalled successfully."

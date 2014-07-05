@@ -1,0 +1,18 @@
+Title ZTE USB Datacard Driver Installer, Version: ZTEDriver_MacV1.3.33
+Version 
+Description Welcome to choose ZTE Product.
+This program will install the usb driver for ZTE Datacard.
+DefaultLocation /
+DeleteWarning 
+
+### Package Flags
+
+NeedsAuthorization YES
+Required NO
+Relocatable NO
+RequiresReboot NO
+UseUserMask NO
+OverwritePermissions NO
+InstallFat YES
+RootVolumeOnly YES
+OnlyUpdateInstalledLanguages NO

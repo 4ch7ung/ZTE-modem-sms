@@ -9,7 +9,10 @@ do
 		echo "[ERROR] Error occured while getting imei numbers"
 		exit 1
 	fi
-
+	if [ -e $work_dir/sock/$imei ]
+	then
+		rm -f $work_dir/sock/$imei
+	fi
 	sudo ln -s $device $work_dir/sock/$imei
 	if [ $? -ne 0 ]
 	then

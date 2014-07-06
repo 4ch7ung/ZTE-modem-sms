@@ -29,7 +29,7 @@ int main(int argc, char * argv[])
 	}
 
 	fputs("AT+CMGF=1\r",ofile);
-	printf("AT+CMGF=1 ... ");
+	printf("[INFO] %s: AT+CMGF=1 ... ", argv[1]);
 	while(ifile)
 	{
 		fgets(buff, 256, ifile);
@@ -38,10 +38,12 @@ int main(int argc, char * argv[])
 			printf("OK!\n");
 			break;
 		}
+		if(!strncmp(buff,"ERROR",5))
+			error(buff);
 	}
 	
 	fputs("AT+CPMS=\"SM\",\"SM\",\"SM\"\r", ofile);
-	printf("AT+CPMS=\"SM\",\"SM\",\"SM\" ... ");
+	printf("[INFO] %s: AT+CPMS=\"SM\",\"SM\",\"SM\" ... ", argv[1]);
 	while(ifile)
 	{
 		fgets(buff,256,ifile);
@@ -50,10 +52,12 @@ int main(int argc, char * argv[])
 			printf("OK!\n");
 			break;
 		}
+		if(!strncmp(buff,"ERROR",5))
+			error(buff);
 	}
 
 	fputs("AT+CNMI=1,2,0,0,0\r",ofile);
-	printf("AT+CNMI=1,2,0,0,0 ... ");
+	printf("[INFO] %s: AT+CNMI=1,2,0,0,0 ... ", argv[1]);
 	while(ifile)
 	{
 		fgets(buff,256,ifile);
@@ -62,8 +66,9 @@ int main(int argc, char * argv[])
 			printf("OK!\n");
 			break;
 		}
+		if(!strncmp(buff,"+CMS ERROR",10))
+			error(buff);
 	}
-
 	if(ifile) fclose(ifile);
 	if(ofile) fclose(ofile);
 	return 0;

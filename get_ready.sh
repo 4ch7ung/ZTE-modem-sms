@@ -20,13 +20,17 @@ do
 		((i++))
 	fi
 done
-echo "[DONE] $i sockets created in dir $work_dir/sock"
-cd $workdir/sock
+echo "[INFO] $i sockets created in dir $work_dir/sock"
+cd $work_dir/sock
+j=0
 for device in `ls`
 do
 	$work_dir/bin/minit_session $device
 	if [ $? -ne 0 ]
+	then
 		echo  "[ERROR] Error occured on $device init"
 		exit 1
 	fi
+	((j++))
 done
+echo "[DONE] $j modems initialized"

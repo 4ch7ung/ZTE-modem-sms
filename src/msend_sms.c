@@ -33,17 +33,23 @@ int main(int argc, char * argv[])
 	while(ifile)
 	{
 		fgets(buff,256,ifile);
-		if(!strncpy(buff,">",1))
+		printf("[INFO] %s: %s", argv[1], buff);
+		if(!strncmp(buff,"AT+CMGS",7))
 			break;
 	}
-	sprintf(str,"%s%c",argv[2], char(32));
+	sprintf(str,"%s\032", argv[3]);
 	fputs(str,ofile);
 	while(ifile)
 	{
 		fgets(buff,256,ifile);
 		if(!strncmp(buff,"+CMGS",5))
 		{
-			printf("%s ... ",buff);
+			printf("[INFO] %s: +CMGS ... ", argv[1]);
+			break;
+		}
+		if(!strncmp(buff,"+CMS ERROR",10))
+		{
+			printf("[ERROR] %s: %s", argv[1], buff);
 			break;
 		}
 	}
@@ -53,6 +59,11 @@ int main(int argc, char * argv[])
 		if(!strncmp(buff,"OK",2))
 		{
 			printf("OK!\n");
+			break;
+		}
+		if(!strncmp(buff,"+CMS ERROR",10))
+		{
+			printf("[ERROR] %s: %s", argv[1], buff);
 			break;
 		}
 	}

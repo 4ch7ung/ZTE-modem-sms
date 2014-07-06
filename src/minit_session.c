@@ -42,8 +42,8 @@ int main(int argc, char * argv[])
 			error(buff);
 	}
 	
-	fputs("AT+CPMS=\"SM\",\"SM\",\"SM\"\r", ofile);
-	printf("[INFO] %s: AT+CPMS=\"SM\",\"SM\",\"SM\" ... ", argv[1]);
+	fputs("AT+CPMS=\"ME\",\"ME\",\"ME\"\r", ofile);
+	printf("[INFO] %s: AT+CPMS=\"ME\",\"ME\",\"ME\" ... ", argv[1]);
 	while(ifile)
 	{
 		fgets(buff,256,ifile);

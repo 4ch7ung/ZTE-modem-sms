@@ -3,7 +3,7 @@ project( ZTEmodem )
 
 set( EXECUTABLE_OUTPUT_PATH bin )
 set( SOURCE_DIR src )
-set( SUBPROGRAMS minit_session mget_imei msend_sms )
+set( SUBPROGRAMS minit_session mget_imei msend_sms mserver )
 
 foreach( PROG_NAME ${SUBPROGRAMS} )
 	add_executable( ${PROG_NAME} "${SOURCE_DIR}/${PROG_NAME}.c" )

@@ -38,6 +38,9 @@ int main(int argc, char * argv[])
 		{
 			strncpy(phone,buff+7,12);
 			printf("[INFO] %s: Message from %s\n", argv[1], phone);
+			fgets(buff,256,ifile);
+			buff[strlen(buff)-2] = 0;
+			printf("[INFO] %s: %s\n", argv[1], buff); 
 			sprintf(cmd,"AT+CMGS=\"%s\"\r",phone);
 			fputs(cmd,ofile);
 			while(ifile)

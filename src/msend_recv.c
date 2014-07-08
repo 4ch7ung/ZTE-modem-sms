@@ -12,14 +12,21 @@ int main(int argc, char * argv[])
 {
 	FILE * ifile;
 	FILE * ofile;
+	FILE * savefile;
 	char buff[256];
-	char str[256];
+	char cmd[256];
+	char msg[256];
+	char sphone[256];
+	char rphone[256];
 	char imei[5];
+	char savedir[256];
 	
-	if(argc < 4)
-		error("Usage: msend_recv <serial_device> <dst_phone> <message>");
+	if(argc < 5)
+		error("Usage: msend_recv <serial_device> <dst_phone> <message> <save_dir>");
 	
 	strncpy(imei,argv[1]+strlen(argv[1])-4,4);
+	strcpy(sphone,argv[2]);
+	strcpy(savedir,argv[4]);
 	ifile = fopen(argv[1], "r");
 	ofile = fopen(argv[1], "a+");
 	if(ifile == NULL)
@@ -29,9 +36,9 @@ int main(int argc, char * argv[])
 		fclose(ifile);
 		error("Couldn't open device file for writing.");
 	}
-	
-	sprintf(str, "AT+CMGS=\"%s\"\r", argv[2]);
-	fputs(str,ofile);
+// Start of SMS send	
+	sprintf(cmd,"AT+CMGS=\"%s\"\r",sphone);
+	fputs(cmd,ofile);
 	while(ifile)
 	{
 		fgets(buff,256,ifile);
@@ -39,8 +46,8 @@ int main(int argc, char * argv[])
 		if(!strncmp(buff,"AT+CMGS",7))
 			break;
 	}
-	sprintf(str,"%s\032", argv[3]);
-	fputs(str,ofile);
+	sprintf(msg,"%s\032",argv[3]);
+	fputs(msg,ofile);
 	while(ifile)
 	{
 		fgets(buff,256,ifile);
@@ -52,7 +59,7 @@ int main(int argc, char * argv[])
 		if(!strncmp(buff,"+CMS ERROR",10))
 		{
 			printf("[ERROR] %s: %s", imei, buff);
-			break;
+			exit(1);
 		}
 	}
 	while(ifile)
@@ -66,9 +73,48 @@ int main(int argc, char * argv[])
 		if(!strncmp(buff,"+CMS ERROR",10))
 		{
 			printf("[ERROR] %s: %s", imei, buff);
-			break;
+			exit(1);
 		}
 	}
+// End of SMS send
+// Start of SMS wait
+	printf("[INFO] %s: Waiting for SMS reaponse ... ", imei);
+	while(ifile)
+	{
+		fgets(buff,256,ifile);
+		if(!strncmp(buff,"+CMT",4))
+		{
+			strncpy(rphone,buff+7,strlen(sphone));
+			if(strcmp(rphone,sphone))
+			{
+				printf("NO\n[INFO] %s: Recieved message from %s\n", imei, rphone);
+				fgets(buff,256,ifile);
+				printf("\t%s",buff);
+			}
+			else
+			{
+				printf("YES\n[INFO] %s: Received message from %s\n", imei, rphone);
+				fgets(buff,256,ifile);
+				printf("\t%s",buff);
+				//buff[strlen(buff)-2] = 0;
+				strcat(savedir,"/");
+				strcat(savedir,imei);
+				savefile = fopen(savedir, "w+");
+				if(savefile)
+				{
+					fputs(buff,savefile);
+					fclose(savefile);
+					break;
+				}
+				else
+				{
+					printf("[ERROR] %s: Fail to open save file for writing\n",imei);
+					break;
+				}
+			}
+		}
+	}
+// End of SMS wait
 	if(ifile) fclose(ifile);
 	if(ofile) fclose(ofile);
 	return 0;

@@ -37,7 +37,7 @@ int main(int argc, char * argv[])
 		error("Couldn't open device file for writing.");
 	}
 // Start of SMS send	
-	sprintf(cmd,"AT+CMGS=\"%s\"\r",sphone);
+	sprintf(cmd,"AT+CMGS=\"%s\"\r",argv[2]);
 	fputs(cmd,ofile);
 	while(ifile)
 	{
@@ -84,8 +84,9 @@ int main(int argc, char * argv[])
 		fgets(buff,256,ifile);
 		if(!strncmp(buff,"+CMT",4))
 		{
-			strncpy(rphone,buff+7,strlen(sphone));
-			if(strcmp(rphone,sphone))
+			strncpy(rphone,buff+7,12);
+			rphone[12] = 0;
+			if(strcmp(rphone,argv[2]))
 			{
 				printf("NO\n[INFO] %s: Recieved message from %s\n", imei, rphone);
 				fgets(buff,256,ifile);

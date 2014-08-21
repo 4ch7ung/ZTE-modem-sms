@@ -8,5 +8,5 @@ fi
 cd $work_dir/sock
 for device in `ls`
 do
-	$work_dir/bin/msend_sms $device "$1" "$2 $device"&
+	$work_dir/bin/msend_sms $device "$1" "$2"&
 done

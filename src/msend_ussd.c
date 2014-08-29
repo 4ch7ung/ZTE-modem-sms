@@ -93,8 +93,8 @@ int main(int argc, char * argv[])
 		{
 			strtok(buff,"\"");
 			msg = strtok(NULL, "\"");
-			convertUTF16BE_to_UTF8(msg, cmd);
-			printf("[INFO] %s: %s\n", imei, cmd);
+			//convertUTF16BE_to_UTF8(msg, cmd);
+			printf("[INFO] %s: %s\n", imei, msg);
 			break;
 		}
 	}
